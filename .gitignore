@@ -1,0 +1,9 @@
+.idea/
+__pycache__/
+build/
+dist/
+doh1.egg-info/
+venv/
+
+tmp*.py
+*.log
