@@ -15,6 +15,10 @@ class Report(Enum):
         "SecondaryCode": "01",
         "Note": None
     }
+    PRESENT_OUTSIDE = {
+        "MainCode": "02",
+        "SecondaryCode": "05"
+    }
 
 
 def _log_response(func):
