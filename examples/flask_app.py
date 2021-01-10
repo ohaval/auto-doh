@@ -1,9 +1,11 @@
 import os
+from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, Blueprint
 
 LOGS_PATH = Path(__file__).parent / "logs.log"
+SKIP_FILE = Path(__file__).parent / "skipdays.txt"
 
 app = Flask(__name__)
 doh_bp = Blueprint("doh", __name__, url_prefix="/doh")
@@ -44,6 +46,19 @@ def enable():
     except KeyError:
         pass
     return "Enabled"
+
+
+@doh_bp.route("/skip/<date>")
+def skip(date):
+    try:
+        date = datetime.strptime(date, "%Y%m%d")
+    except ValueError:
+        return "Failed to parse date"
+
+    formatted_date = date.strftime("%Y-%m-%d")
+    with open(SKIP_FILE, 'a') as fh:
+        fh.write(f"{formatted_date}\n")
+        return f"Will skip on {formatted_date}"
 
 
 app.register_blueprint(doh_bp)
