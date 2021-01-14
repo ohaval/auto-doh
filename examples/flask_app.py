@@ -21,7 +21,7 @@ def home():
 def logs():
     try:
         with open(LOGS_PATH, 'r') as fh:
-            return fh.read()
+            return "</br>".join(fh.readlines())
     except FileNotFoundError:
         return "FileNotFoundError"
 
