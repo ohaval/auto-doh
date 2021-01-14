@@ -1,6 +1,6 @@
 import logging
-import re
 from enum import Enum
+from urllib.parse import urlparse
 
 import requests
 
@@ -25,7 +25,7 @@ def _log_response(func):
     def wrapper(*args, **kwargs):
         response = func(*args, **kwargs)
         if response is not None:
-            path = re.search(r"https?://.*?(/.*)", response.url).group(1)
+            path = urlparse(response.url).path
             if response.ok:
                 logging.info(f"Request succeeded [{response.status_code}] - {path}")
             else:
