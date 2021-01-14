@@ -45,12 +45,12 @@ class Doh1APIClient:
             "cookie": cookie
         }
 
+    def report(self, type_: Report) -> requests.Response:
+        logging.info(f"Reporting {type_.name}")
+        return self._post(data=type_.value)
+
     @_log_response
     def _post(self, data: dict = None) -> requests.Response:
         return requests.post(self.url,
                              data=data,
                              headers=self.headers)
-
-    def report(self, type_: Report) -> requests.Response:
-        logging.info(f"Reporting {type_.name}")
-        return self._post(data=type_.value)
