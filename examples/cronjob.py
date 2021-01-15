@@ -34,11 +34,11 @@ def report_present():
 
 
 def get_client_from_env():
-    _validate_env()
+    validate_env()
     return Doh1APIClient(os.environ["DOH1_URL"], os.environ["DOH1_COOKIE"])
 
 
-def _validate_env():
+def validate_env():
     for var in ("DOH1_URL", "DOH1_COOKIE"):
         if var not in os.environ:
             message = f"{var} is missing as an environment variable."
@@ -46,7 +46,7 @@ def _validate_env():
             raise MissingEnvironmentVariableException(message)
 
 
-def _check_for_skip():
+def check_for_skip():
     try:
         with open(SKIP_FILE, 'r') as fh:
             skip_days = fh.read().splitlines()
@@ -70,7 +70,7 @@ def notify(status_code: int):
 
 
 def main():
-    if not _check_for_skip():
+    if not check_for_skip():
         response = report_present()
         if IFTTT_KEY is not None:
             notify(response.status_code)
