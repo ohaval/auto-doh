@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 from pathlib import Path
 
+import requests
+
 from doh1 import Doh1APIClient, Report
 
 logging.basicConfig(level=logging.INFO,
@@ -19,6 +21,7 @@ if os.environ.get("DOH1_DISABLE") == "TRUE":
     exit(0)
 
 SKIP_FILE = Path(__file__).parent / "skipdays.txt"
+IFTTT_KEY = os.environ.get("IFTTT_KEY")
 
 
 class MissingEnvironmentVariableException(Exception):
@@ -56,9 +59,23 @@ def _check_for_skip():
     return False
 
 
+def notify(status_code: int):
+    message = f"Report returned {status_code}"
+    response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{IFTTT_KEY}?value1={message}")
+
+    if response.ok:
+        logging.info("Successfully alerted using IFTTT")
+    else:
+        logging.error(f"Failed to alert [{response.status_code}] - {response.text}")
+
+
 def main():
     if not _check_for_skip():
-        report_present()
+        response = report_present()
+        if IFTTT_KEY is not None:
+            notify(response.status_code)
+        else:
+            logging.info("IFTTT_KEY environment variable wasn't set")
 
 
 if __name__ == '__main__':
