@@ -23,22 +23,6 @@ class MissingEnvironmentVariableException(Exception):
     pass
 
 
-def report_present():
-    client = get_client_from_env()
-    return client.report(Report.PRESENT)
-
-
-def get_client_from_env():
-    validate_env()
-    return Doh1APIClient(os.environ["DOH1_URL"], os.environ["DOH1_COOKIE"])
-
-
-def validate_env():
-    for var in ("DOH1_URL", "DOH1_COOKIE"):
-        if var not in os.environ:
-            raise MissingEnvironmentVariableException(f"{var} is missing as an environment variable.")
-
-
 def check_for_skip():
     try:
         with open(SKIP_FILE, 'r') as fh:
@@ -50,6 +34,17 @@ def check_for_skip():
         logging.info("Skipping today")
         return True
     return False
+
+
+def get_client_from_env():
+    validate_env()
+    return Doh1APIClient(os.environ["DOH1_URL"], os.environ["DOH1_COOKIE"])
+
+
+def validate_env():
+    for var in ("DOH1_URL", "DOH1_COOKIE"):
+        if var not in os.environ:
+            raise MissingEnvironmentVariableException(f"{var} is missing as an environment variable.")
 
 
 def notify(status_code: int):
@@ -64,7 +59,8 @@ def notify(status_code: int):
 
 def main():
     if not check_for_skip():
-        response = report_present()
+        client = get_client_from_env()
+        response = client.report(Report.PRESENT)
         if IFTTT_KEY is not None:
             notify(response.status_code)
         else:
