@@ -4,7 +4,7 @@ from pathlib import Path
 
 from flask import Flask, Blueprint
 
-LOGS_PATH = Path(__file__).parent / "logs.log"
+LOGS_PATH = Path(__file__).parent / "_cronjob.log"
 SKIP_FILE = Path(__file__).parent / "skipdays.txt"
 
 app = Flask(__name__)

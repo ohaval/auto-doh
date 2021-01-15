@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO,
                     datefmt="%Y-%m-%d %H:%M:%S""",
                     handlers=[
                         logging.StreamHandler(),
-                        logging.FileHandler(filename=Path(__file__).parent / "logs.log")
+                        logging.FileHandler(filename=Path(__file__).parent / "_cronjob.log")
                     ]
                     )
 
