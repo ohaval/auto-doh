@@ -9,12 +9,7 @@ from doh1 import Doh1APIClient, Report
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s [%(levelname)-8s] - %(message)s""",
-                    datefmt="%Y-%m-%d %H:%M:%S""",
-                    handlers=[
-                        logging.StreamHandler(),
-                        logging.FileHandler(filename=Path(__file__).parent / "_cronjob.log")
-                    ]
-                    )
+                    datefmt="%Y-%m-%d %H:%M:%S""")
 
 if os.environ.get("DOH1_DISABLE") == "TRUE":
     logging.info("DOH1 is disabled.")
@@ -41,9 +36,7 @@ def get_client_from_env():
 def validate_env():
     for var in ("DOH1_URL", "DOH1_COOKIE"):
         if var not in os.environ:
-            message = f"{var} is missing as an environment variable."
-            logging.error(message)
-            raise MissingEnvironmentVariableException(message)
+            raise MissingEnvironmentVariableException(f"{var} is missing as an environment variable.")
 
 
 def check_for_skip():
