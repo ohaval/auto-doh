@@ -1,3 +1,15 @@
+"""
+Cron line:
+30 5 * * 0-4 . $HOME/.profile; python3 $HOME/auto-doh/examples/cronjob.py >> $HOME/auto-doh/examples/_cronjob.log 2>&1
+
+Required Environment Variables:
+- DOH1_URL
+- DOH1_COOKIE
+
+Optional Environment Variables:
+- IFTTT_KEY
+"""
+
 import logging
 import os
 from datetime import datetime
