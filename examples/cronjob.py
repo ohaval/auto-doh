@@ -70,7 +70,9 @@ def notify(status_code: int):
 
 
 def main():
-    if not check_for_skip():
+    if check_for_skip():
+        logging.info("Skipping today")
+    else:
         client = get_client_from_env()
         response = client.report(Report.PRESENT)
         if IFTTT_KEY is not None:
