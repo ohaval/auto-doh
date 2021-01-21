@@ -12,6 +12,8 @@ Optional Environment Variables:
 
 import logging
 import os
+import random
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -48,6 +50,12 @@ def check_for_skip():
     return False
 
 
+def random_sleep():
+    sleep_time = random.randint(0, 120)
+    time.sleep(sleep_time)
+    logging.info(f"Woke up from a {sleep_time} seconds sleep")
+
+
 def get_client_from_env():
     validate_env()
     return Doh1APIClient(os.environ["DOH1_URL"], os.environ["DOH1_COOKIE"])
@@ -73,6 +81,8 @@ def main():
     if check_for_skip():
         logging.info("Skipping today")
     else:
+        random_sleep()
+
         client = get_client_from_env()
         response = client.report(Report.PRESENT)
         if IFTTT_KEY is not None:
