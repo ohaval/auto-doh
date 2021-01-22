@@ -1,15 +1,9 @@
 """
 Cron line:
-30 5 * * 0-4 . $HOME/.profile; python3 $HOME/auto-doh/examples/cronjob.py >> $HOME/auto-doh/examples/_cronjob.log 2>&1
-
-Required Environment Variables:
-- DOH1_URL
-- DOH1_COOKIE
-
-Optional Environment Variables:
-- IFTTT_KEY
+30 5 * * 0-4 python3 $HOME/auto-doh/examples/cronjob.py --url URL --cookie COOKIE --ifttt-key KEY >> $HOME/auto-doh/examples/_cronjob.log 2>&1
 """
 
+import argparse
 import logging
 import os
 import random
@@ -30,11 +24,13 @@ if os.environ.get("DOH1_DISABLE") == "TRUE":
     exit(0)
 
 SKIP_FILE = Path(__file__).parent / "skipdays.txt"
-IFTTT_KEY = os.environ.get("IFTTT_KEY")
 
-
-class MissingEnvironmentVariableException(Exception):
-    pass
+parser = argparse.ArgumentParser()
+parser.add_argument("--url", required=True, help="The doh1 API report url")
+parser.add_argument("--cookie", required=True, help="The doh1 user cookie (received after passing captcha)")
+parser.add_argument("--ifttt-key", dest="ifttt_key",
+                    help="The personal IFTTT key is required in order to send notifications")
+args = parser.parse_args()
 
 
 def check_for_skip():
@@ -56,20 +52,9 @@ def random_sleep():
     logging.info(f"Woke up from a {sleep_time} seconds sleep")
 
 
-def get_client_from_env():
-    validate_env()
-    return Doh1APIClient(os.environ["DOH1_URL"], os.environ["DOH1_COOKIE"])
-
-
-def validate_env():
-    for var in ("DOH1_URL", "DOH1_COOKIE"):
-        if var not in os.environ:
-            raise MissingEnvironmentVariableException(f"{var} is missing as an environment variable.")
-
-
 def notify(status_code: int):
     message = f"Report returned {status_code}"
-    response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{IFTTT_KEY}?value1={message}")
+    response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{args.ifttt_key}?value1={message}")
 
     if response.ok:
         logging.info("Successfully alerted using IFTTT")
@@ -83,12 +68,13 @@ def main():
     else:
         random_sleep()
 
-        client = get_client_from_env()
+        client = Doh1APIClient(args.url, args.cookie)
         response = client.report(Report.PRESENT)
-        if IFTTT_KEY is not None:
+
+        if args.ifttt_key is not None:
             notify(response.status_code)
         else:
-            logging.info("IFTTT_KEY environment variable wasn't set")
+            logging.info("ifttt-key parameter wasn't passed")
 
 
 if __name__ == '__main__':
