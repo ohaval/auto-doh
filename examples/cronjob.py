@@ -15,22 +15,22 @@ import requests
 
 from doh1 import Doh1APIClient, Report
 
-logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s [%(levelname)-8s] - %(message)s""",
-                    datefmt="%Y-%m-%d %H:%M:%S""")
-
-if os.environ.get("DOH1_DISABLE") == "TRUE":
-    logging.info("DOH1 is disabled.")
-    exit(0)
-
 SKIP_FILE = Path(__file__).parent / "skipdays.txt"
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--url", required=True, help="The doh1 API report url")
-parser.add_argument("--cookie", required=True, help="The doh1 user cookie (received after passing captcha)")
-parser.add_argument("--ifttt-key", dest="ifttt_key",
-                    help="The personal IFTTT key is required in order to send notifications")
-args = parser.parse_args()
+
+def _configure_logging():
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s [%(levelname)-8s] - %(message)s""",
+                        datefmt="%Y-%m-%d %H:%M:%S""")
+
+
+def _parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--url", required=True, help="The doh1 API report url")
+    parser.add_argument("--cookie", required=True, help="The doh1 user cookie (received after passing captcha)")
+    parser.add_argument("--ifttt-key", dest="ifttt_key",
+                        help="The personal IFTTT key is required in order to send notifications")
+    return parser.parse_args()
 
 
 def check_for_skip():
@@ -52,9 +52,9 @@ def random_sleep():
     logging.info(f"Woke up from a {sleep_time} seconds sleep")
 
 
-def notify(status_code: int):
+def notify(status_code: int, ifttt_key: str):
     message = f"Report returned {status_code}"
-    response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{args.ifttt_key}?value1={message}")
+    response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{ifttt_key}?value1={message}")
 
     if response.ok:
         logging.info("Successfully alerted using IFTTT")
@@ -63,6 +63,14 @@ def notify(status_code: int):
 
 
 def main():
+    _configure_logging()
+
+    if os.environ.get("DOH1_DISABLE") == "TRUE":
+        logging.info("DOH1 is disabled by environment variable")
+        exit(0)
+
+    args = _parse_args()
+
     if check_for_skip():
         logging.info("Skipping today")
     else:
@@ -72,7 +80,7 @@ def main():
         response = client.report(Report.PRESENT)
 
         if args.ifttt_key is not None:
-            notify(response.status_code)
+            notify(response.status_code, args.ifttt_key)
         else:
             logging.info("ifttt-key parameter wasn't passed")
 
