@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 from pathlib import Path
@@ -5,13 +6,15 @@ from pathlib import Path
 from flask import Flask, Blueprint
 
 LOGS_PATH = Path(__file__).parent / "_cronjob.log"
-SKIP_FILE = Path(__file__).parent / "skipdays.txt"
+CONFIG_FILE = Path(__file__).parent / "config.json"
 
 app = Flask(__name__)
 doh_bp = Blueprint("doh", __name__, url_prefix="/doh")
 
+with open(CONFIG_FILE, 'r') as fh:
+    config = json.load(fh)
 
-@doh_bp.route("/")
+
 @doh_bp.route("/home")
 def home():
     return "Home"
@@ -28,37 +31,38 @@ def logs():
 
 @doh_bp.route("/status")
 def status():
-    if os.environ.get("DOH1_DISABLE") == "TRUE":
-        return "Status: Disabled"
-    return "Status: Enabled"
+    return "Enabled" if config["ENABLED"] else "Disabled"
 
 
 @doh_bp.route("/disable")
 def disable():
-    os.environ["DOH1_DISABLE"] = "TRUE"
+    config["ENABLED"] = False
+    commit_config()
     return "Disabled"
 
 
 @doh_bp.route("/enable")
 def enable():
-    try:
-        del os.environ["DOH1_DISABLE"]
-    except KeyError:
-        pass
+    config["ENABLED"] = True
+    commit_config()
     return "Enabled"
 
 
 @doh_bp.route("/skip/<date>")
 def skip(date):
     try:
-        date = datetime.strptime(date, "%Y%m%d")
+        datetime.strptime(date, "%Y%m%d")
     except ValueError:
         return "Failed to parse date"
 
-    formatted_date = date.strftime("%Y-%m-%d")
-    with open(SKIP_FILE, 'a') as fh:
-        fh.write(f"{formatted_date}\n")
-        return f"Will skip on {formatted_date}"
+    config["SKIP_DAYS"].append(date)
+    commit_config()
+    return f"Will skip on {date}"
+
+
+def commit_config():
+    with open(CONFIG_FILE, 'w') as fh:
+        json.dump(config, fh)
 
 
 app.register_blueprint(doh_bp)

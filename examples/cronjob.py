@@ -4,8 +4,8 @@ Cron line:
 """
 
 import argparse
+import json
 import logging
-import os
 import random
 import time
 from datetime import datetime
@@ -15,7 +15,10 @@ import requests
 
 from doh1 import Doh1APIClient, Report
 
-SKIP_FILE = Path(__file__).parent / "skipdays.txt"
+CONFIG_FILE = Path(__file__).parent / "config.json"
+
+with open(CONFIG_FILE, 'r') as fh:
+    config = json.load(fh)
 
 
 def _configure_logging():
@@ -34,13 +37,7 @@ def _parse_args():
 
 
 def check_for_skip():
-    try:
-        with open(SKIP_FILE, 'r') as fh:
-            skip_days = fh.read().splitlines()
-    except FileNotFoundError:
-        return False
-
-    if datetime.now().strftime("%Y-%m-%d") in skip_days:
+    if datetime.now().strftime("%Y%m%d") in config["SKIP_DAYS"]:
         logging.info("Skipping today")
         return True
     return False
@@ -65,24 +62,24 @@ def notify(status_code: int, ifttt_key: str):
 def main():
     _configure_logging()
 
-    if os.environ.get("DOH1_DISABLE") == "TRUE":
+    if not config["ENABLED"]:
         logging.info("DOH1 is disabled by environment variable")
         exit(0)
 
     args = _parse_args()
 
     if check_for_skip():
-        logging.info("Skipping today")
+        return
+
+    random_sleep()
+
+    client = Doh1APIClient(args.url, args.cookie)
+    response = client.report(Report.PRESENT)
+
+    if args.ifttt_key is not None:
+        notify(response.status_code, args.ifttt_key)
     else:
-        random_sleep()
-
-        client = Doh1APIClient(args.url, args.cookie)
-        response = client.report(Report.PRESENT)
-
-        if args.ifttt_key is not None:
-            notify(response.status_code, args.ifttt_key)
-        else:
-            logging.info("ifttt-key parameter wasn't passed")
+        logging.info("ifttt-key parameter wasn't passed")
 
 
 if __name__ == '__main__':
