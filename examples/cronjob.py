@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Cron line:
 30 5 * * 0-4 python3 $HOME/auto-doh/examples/cronjob.py --url URL --cookie COOKIE --ifttt-key KEY >> $HOME/auto-doh/examples/_cronjob.log 2>&1
