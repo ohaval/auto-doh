@@ -31,8 +31,7 @@ def _parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", required=True, help="The doh1 API report url")
     parser.add_argument("--cookie", required=True, help="The doh1 user cookie (received after passing captcha)")
-    parser.add_argument("--ifttt-key", dest="ifttt_key",
-                        help="The personal IFTTT key is required in order to send notifications")
+    parser.add_argument("--ifttt-key", help="The personal IFTTT key is required in order to send notifications")
     return parser.parse_args()
 
 
