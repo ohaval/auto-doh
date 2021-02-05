@@ -6,7 +6,7 @@ from pathlib import Path
 
 from flask import Flask, Blueprint
 
-LOGS_PATH = Path(__file__).parent / "_cronjob.log"
+LOGS_PATH = Path(__file__).parent / ".cronjob.log"
 CONFIG_FILE = Path(__file__).parent / "config.json"
 
 app = Flask(__name__)
