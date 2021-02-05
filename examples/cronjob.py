@@ -47,12 +47,16 @@ def random_sleep():
 
 
 def notify(ifttt_key: str, message: str):
-    response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{ifttt_key}?value1={message}")
+    try:
+        response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{ifttt_key}?value1={message}")
 
-    if response.ok:
-        logging.info("Successfully alerted using IFTTT")
+    except requests.RequestException:
+        logging.info("Failed to send GET request to IFTTT", exc_info=True)
     else:
-        logging.error(f"Failed to alert [{response.status_code}] - {response.text}")
+        if response.ok:
+            logging.info("Successfully alerted using IFTTT")
+        else:
+            logging.error(f"Failed to alert using IFTTT (received {response.status_code}) - {response.text}")
 
 
 def main():
