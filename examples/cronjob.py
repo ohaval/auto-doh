@@ -46,8 +46,7 @@ def random_sleep():
     logging.info(f"Woke up from a {sleep_time} seconds sleep")
 
 
-def notify(status_code: int, ifttt_key: str):
-    message = f"Report returned {status_code}"
+def notify(ifttt_key: str, message: str):
     response = requests.get(f"https://maker.ifttt.com/trigger/Notify/with/key/{ifttt_key}?value1={message}")
 
     if response.ok:
@@ -72,9 +71,7 @@ def main():
     response = client.report(Report.PRESENT)
 
     if args.ifttt_key is not None:
-        notify(response.status_code, args.ifttt_key)
-    else:
-        logging.info("ifttt-key parameter wasn't passed")
+        notify(args.ifttt_key, message=f"Report returned {response.status_code}")
 
 
 if __name__ == '__main__':
