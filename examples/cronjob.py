@@ -15,16 +15,14 @@ import requests
 
 from doh1 import Doh1APIClient, Report
 
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s [%(levelname)-8s] - %(message)s""",
+                    datefmt="%Y-%m-%d %H:%M:%S""")
+
 CONFIG_FILE = Path(__file__).parent / "config.json"
 
 with open(CONFIG_FILE, 'r') as fh:
     config = json.load(fh)
-
-
-def _configure_logging():
-    logging.basicConfig(level=logging.INFO,
-                        format="%(asctime)s [%(levelname)-8s] - %(message)s""",
-                        datefmt="%Y-%m-%d %H:%M:%S""")
 
 
 def _parse_args():
@@ -59,8 +57,6 @@ def notify(status_code: int, ifttt_key: str):
 
 
 def main():
-    _configure_logging()
-
     if not config["ENABLED"]:
         logging.info("DOH1 is disabled by environment variable")
         exit(0)
