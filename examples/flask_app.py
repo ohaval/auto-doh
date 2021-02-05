@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""
+Run with:
+nohup ./flask_app.py >> .flask_app.log 2>&1 &
+"""
+
 import json
 import os
 from datetime import datetime
