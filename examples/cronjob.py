@@ -31,6 +31,8 @@ def _parse_args():
     parser.add_argument("--url", required=True, help="The doh1 API report url")
     parser.add_argument("--cookie", required=True, help="The doh1 user cookie (received after passing captcha)")
     parser.add_argument("--ifttt-key", help="The personal IFTTT key is required in order to send notifications")
+    parser.add_argument("--sleep-time", type=int, default=600,
+                        help="The maximum amount of seconds to sleep before reporting (default %(default)s)")
 
     args = parser.parse_args()
     logging.info(f"Provided args: {args}")
@@ -44,8 +46,8 @@ def check_for_skip():
     return False
 
 
-def random_sleep():
-    sleep_time = random.randint(0, 120)
+def random_sleep(sleep_time: int):
+    sleep_time = random.randint(0, sleep_time)
     time.sleep(sleep_time)
     logging.info(f"Woke up from a {sleep_time} seconds sleep")
 
@@ -73,7 +75,7 @@ def main():
     if check_for_skip():
         return
 
-    random_sleep()
+    random_sleep(args.sleep_time)
 
     client = Doh1APIClient(args.url, args.cookie)
     response = client.report(Report.PRESENT)
