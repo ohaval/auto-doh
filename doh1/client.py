@@ -16,7 +16,6 @@ class Report(Enum):
     DAY_OFF = {
         "MainCode": "04",
         "SecondaryCode": "01",
-        "Note": None
     }
     PRESENT_OUTSIDE = {
         "MainCode": "02",
@@ -42,7 +41,13 @@ def _log_response(func):
 
 
 class Doh1APIClient:
+    """interface for every action to doh1"""
     def __init__(self, url: str, cookie: str):
+        """
+        :param url: full URL of the report api action
+        :param cookie: personal cookie which being received after authenticating
+                       and solving CAPTCHA for the first time
+        """
         self.url = url
         self.headers = {
             "User-Agent": _ua,
