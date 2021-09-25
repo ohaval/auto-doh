@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""
-Run with:
+"""A small web application to control remotely the doh1 cronjob config
+
+Use nohup to run without hangups:
 nohup ./flask_app.py >> .flask_app.log 2>&1 &
 """
 
@@ -17,7 +18,7 @@ CONFIG_FILE = Path(__file__).parent / "config.json"
 app = Flask(__name__)
 doh_bp = Blueprint("doh", __name__, url_prefix="/doh")
 
-with open(CONFIG_FILE, 'r') as fh:
+with open(CONFIG_FILE, "r") as fh:
     config = json.load(fh)
 
 
@@ -29,7 +30,7 @@ def home():
 @doh_bp.route("/logs")
 def logs():
     try:
-        with open(LOGS_PATH, 'r') as fh:
+        with open(LOGS_PATH, "r") as fh:
             return "</br>".join(fh.readlines())
     except FileNotFoundError:
         return "FileNotFoundError"
@@ -67,11 +68,11 @@ def skip(date):
 
 
 def commit_config():
-    with open(CONFIG_FILE, 'w') as fh:
+    with open(CONFIG_FILE, "w") as fh:
         json.dump(config, fh)
 
 
 app.register_blueprint(doh_bp)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run("0.0.0.0", port=int(os.environ.get("DOH1_FLASK_PORT", 8050)))

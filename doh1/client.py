@@ -4,6 +4,9 @@ from urllib.parse import urlparse
 
 import requests
 
+_ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, " \
+      "like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+
 
 class Report(Enum):
     PRESENT = {
@@ -27,9 +30,11 @@ def _log_response(func):
         if response is not None:
             path = urlparse(response.url).path
             if response.ok:
-                logging.info(f"Request succeeded [{response.status_code}] - {path}")
+                logging.info(f"Request succeeded [{response.status_code}] - "
+                             f"{path}")
             else:
-                logging.error(f"Request failed [{response.status_code}] - {path} : {response.text}")
+                logging.error(f"Request failed [{response.status_code}] - "
+                              f"{path} : {response.text}")
 
         return response
 
@@ -40,8 +45,7 @@ class Doh1APIClient:
     def __init__(self, url: str, cookie: str):
         self.url = url
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/87.0.4280.66 Safari/537.36",
+            "User-Agent": _ua,
             "cookie": cookie
         }
 
