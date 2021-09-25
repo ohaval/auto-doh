@@ -6,26 +6,20 @@ Cron line example:
 """
 
 import argparse
-import json
 import logging
 import random
 import sys
 import time
-from datetime import datetime
-from pathlib import Path
+from datetime import date
 
 import requests
 
+import cronjob_cfg_api as cron_cfg
 from doh1 import Doh1APIClient, Report
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s [%(levelname)-8s] - %(message)s""",
                     datefmt="%Y-%m-%d %H:%M:%S""")
-
-CONFIG_FILE = Path(__file__).parent / "config.json"
-
-with open(CONFIG_FILE, "r") as fh:
-    config = json.load(fh)
 
 
 def _parse_args():
@@ -47,7 +41,7 @@ def _parse_args():
 
 
 def check_for_skip():
-    if datetime.now().strftime("%Y%m%d") in config["SKIP_DAYS"]:
+    if date.today() in cron_cfg.get_skipdates(as_date=True):
         logging.info("Skipping today")
         return True
     return False
@@ -75,7 +69,7 @@ def notify(ifttt_key: str, message: str):
 
 
 def main():
-    if not config["ENABLED"]:
+    if not cron_cfg.is_enabled():
         logging.info("DOH1 is disabled by environment variable")
         sys.exit()
 
