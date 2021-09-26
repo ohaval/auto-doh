@@ -8,7 +8,6 @@ Cron line example:
 import argparse
 import logging
 import random
-import sys
 import time
 from datetime import date
 
@@ -41,16 +40,12 @@ def _parse_args():
 
 
 def check_for_skip():
-    if date.today() in cron_cfg.get_skipdates(as_date=True):
-        logging.info("Skipping today")
-        return True
-    return False
+    return date.today() in cron_cfg.get_skipdates(as_date=True)
 
 
-def random_sleep(sleep_time: int):
-    sleep_time = random.randint(0, sleep_time)
-    time.sleep(sleep_time)
-    logging.info(f"Woke up from a {sleep_time} seconds sleep")
+def random_sleep(max_sleep_time: int):
+    time.sleep(random.randint(0, max_sleep_time))
+    logging.info(f"Woke up from a {max_sleep_time} seconds sleep")
 
 
 def notify(ifttt_key: str, message: str):
@@ -69,13 +64,14 @@ def notify(ifttt_key: str, message: str):
 
 
 def main():
-    if not cron_cfg.is_enabled():
-        logging.info("DOH1 is disabled by environment variable")
-        sys.exit()
-
     args = _parse_args()
 
+    if not cron_cfg.is_enabled():
+        logging.info("DOH1 is disabled by environment variable")
+        return
+
     if check_for_skip():
+        logging.info("Skipping today")
         return
 
     random_sleep(args.sleep_time)
