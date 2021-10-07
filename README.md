@@ -2,6 +2,12 @@
 
 A simple, lightweight piece of code to report doh1.
 
+```
+pip install doh1
+```
+
+For detailed instructions, read the Automation header.
+
 ## Automation
 
 A cronjob, flask application and a telegram bot are provided under the examples
