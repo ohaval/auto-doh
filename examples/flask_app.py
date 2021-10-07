@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A small web application to control remotely the doh1 cronjob config
+"""A small web application to control remotely the doh1 cronjob config.
 
 **Though the flask app still works, it is recommended to use the telegram bot **
 

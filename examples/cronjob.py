@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A cronjob script to report doh1 daily
+"""A cronjob script to report doh1 daily.
 
 Cron line example:
 30 5 * * 0-4 $HOME/auto-doh/examples/cronjob.py --url URL --cookie "COOKIE" --ifttt-key KEY >> $HOME/auto-doh/examples/.cronjob.log 2>&1  # noqa: E501

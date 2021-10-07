@@ -1,4 +1,4 @@
-"""This module exposes a list of methods to view data and manage the config
+"""This module exposes a list of methods to view data and manage the config.
 
 The configuration file is 'config.json' and it's content is loaded into the
 'config' variable (dictionary).
@@ -68,12 +68,12 @@ def add_skipdate(skipdate: date) -> None:
 
 def filter_skipdates_from_date(skipdates: List[date],
                                date_: date) -> List[date]:
-    """Filters skipdates with items earlier than the provided date"""
+    """Filters skipdates with items earlier than the provided date."""
     return [skipdate for skipdate in skipdates if skipdate >= date_]
 
 
 def format_with_weekday(date_: date, markdownv2: bool = False) -> str:
-    """Returns a string of the date followed by the weekday inside parentheses
+    """Returns a string of the date followed by the weekday inside parentheses.
 
     When the markdownv2 optional parameter is set to True, the returned string
     is returned with escaped characters.

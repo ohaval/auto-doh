@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A telegram bot to control, and view information remotely on a doh1 cronjob
+"""A telegram bot to control, and view information remotely on a doh1 cronjob.
 
 Manually edit the 'TOKEN' variable with the API token, or set the
 'DOH1_BOT_TOKEN' environment variable.
@@ -76,7 +76,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def list_all_skipdates(update: Update, context: CallbackContext) -> None:
-    """Sends a message to the user with all skipdates listed"""
+    """Sends a message to the user with all skipdates listed."""
 
     text = """__All skipdates__
     """
@@ -120,7 +120,7 @@ def skip(update: Update, context: CallbackContext) -> None:
 
 
 def button(update: Update, context: CallbackContext) -> None:
-    """Handles CallbackContext coming from button clicks"""
+    """Handles CallbackContext coming from button clicks."""
     query = update.callback_query
     query.answer()
 
@@ -155,7 +155,7 @@ def button(update: Update, context: CallbackContext) -> None:
 
 
 def _list_skipdates(update: Update, context: CallbackContext) -> None:
-    """Lists (sends a message) skipdates ahead and from the last 10 days"""
+    """Lists (sends a message) skipdates ahead and from the last 10 days."""
 
     text = r"""__Skipdates__
     """

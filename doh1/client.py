@@ -41,7 +41,7 @@ def _log_response(func):
 
 
 class Doh1APIClient:
-    """interface for every action to doh1"""
+    """interface for every action to doh1."""
     def __init__(self, url: str, cookie: str):
         """
         :param url: full URL of the report api action
