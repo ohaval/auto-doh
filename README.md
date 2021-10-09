@@ -32,7 +32,7 @@ IFTTT_KEY="<KEY>"
 
 The telegram bot is useful to view and modify the configuration file remotely.
 
-I use `nohup` to keep the process alive, after I exit the SSH session:
+I use `nohup` to keep the process alive (even after the SSH session is closed):
 
 ```bash
 nohup ./telegram_bot.py >> .telegram_bot.log 2>&1 &
