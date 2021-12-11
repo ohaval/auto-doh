@@ -5,7 +5,7 @@ VERSION = "0.0.1"
 
 
 def parse_requirements(filename: str):
-    with open(filename, 'r') as fh:
+    with open(filename, "r") as fh:
         return fh.readlines()
 
 
