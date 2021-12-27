@@ -44,8 +44,10 @@ def check_for_skip():
 
 
 def random_sleep(max_sleep_time: int):
-    time.sleep(random.randint(0, max_sleep_time))
-    logging.info(f"Woke up from a {max_sleep_time} seconds sleep")
+    sleep_time = random.randint(0, max_sleep_time)
+    time.sleep(sleep_time)
+
+    logging.info(f"Woke up from a {sleep_time} seconds sleep")
 
 
 def notify(ifttt_key: str, message: str):
