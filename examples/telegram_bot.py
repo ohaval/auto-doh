@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""A telegram bot to control, and view information remotely on a doh1 cronjob.
+"""A telegram bot to control, and view information remotely on a doh cronjob.
 
 Manually edit the 'TOKEN' variable with the API token, or set the
-'DOH1_BOT_TOKEN' environment variable.
+'DOH_BOT_TOKEN' environment variable.
 
 Use nohup to run without hangups:
 nohup ./telegram_bot.py >> .telegram_bot.log 2>&1 &
@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s [%(levelname)-8s] - %(message)s""",
                     datefmt="%Y-%m-%d %H:%M:%S""")
 
-TOKEN = os.environ["DOH1_BOT_TOKEN"]
+TOKEN = os.environ["DOH_BOT_TOKEN"]
 
 
 def help_(update: Update, context: CallbackContext) -> None:

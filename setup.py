@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-PACKAGE_NAME = "doh1"
+PACKAGE_NAME = "doh"
 VERSION = "0.0.1"
 
 
@@ -11,6 +11,6 @@ def parse_requirements(filename: str):
 
 setup(name=PACKAGE_NAME,
       version=VERSION,
-      description="A simple, lightweight piece of code to report doh1.",
+      description="A simple, lightweight piece of code to report doh.",
       packages=find_packages(),
       install_requires=parse_requirements("requirements.txt"))

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A small web application to control remotely the doh1 cronjob config.
+"""A small web application to control remotely the doh cronjob config.
 
 **Though the flask app still works, it is recommended to use the telegram bot **
 
@@ -77,4 +77,4 @@ def commit_config():
 app.register_blueprint(doh_bp)
 
 if __name__ == "__main__":
-    app.run("0.0.0.0", port=int(os.environ.get("DOH1_FLASK_PORT", 8050)))
+    app.run("0.0.0.0", port=int(os.environ.get("DOH_FLASK_PORT", 8050)))

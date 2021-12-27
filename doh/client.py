@@ -40,8 +40,8 @@ def _log_response(func):
     return wrapper
 
 
-class Doh1APIClient:
-    """interface for every action to doh1."""
+class DohAPIClient:
+    """interface for every action to doh."""
     def __init__(self, url: str, cookie: str):
         """
         :param url: full URL of the report api action

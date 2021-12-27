@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A cronjob script to report doh1 daily.
+"""A cronjob script to report doh daily.
 
 Cron line example:
 30 5 * * 0-4 $HOME/auto-doh/examples/cronjob.py --url URL --cookie "COOKIE" --ifttt-key KEY >> $HOME/auto-doh/examples/.cronjob.log 2>&1  # noqa: E501
@@ -14,7 +14,7 @@ from datetime import date
 import requests
 
 import cronjob_cfg_api as cron_cfg
-from doh1 import Doh1APIClient, Report
+from doh import DohAPIClient, Report
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s [%(levelname)-8s] - %(message)s""",
@@ -23,9 +23,9 @@ logging.basicConfig(level=logging.INFO,
 
 def _parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--url", required=True, help="The doh1 API report url")
+    parser.add_argument("--url", required=True, help="The doh API report url")
     parser.add_argument("--cookie", required=True,
-                        help="The doh1 user cookie (received after passing "
+                        help="The doh user cookie (received after passing "
                              "captcha)")
     parser.add_argument("--ifttt-key",
                         help="The personal IFTTT key is required in order to "
@@ -67,7 +67,7 @@ def main():
     args = _parse_args()
 
     if not cron_cfg.is_enabled():
-        logging.info("DOH1 is disabled by environment variable")
+        logging.info("DOH is disabled by environment variable")
         return
 
     if check_for_skip():
@@ -76,7 +76,7 @@ def main():
 
     random_sleep(args.sleep_time)
 
-    client = Doh1APIClient(args.url, args.cookie)
+    client = DohAPIClient(args.url, args.cookie)
     response = client.report(Report.PRESENT)
 
     if args.ifttt_key is not None:

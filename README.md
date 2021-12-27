@@ -1,9 +1,9 @@
-# Python Doh1 API Client
+# Python Doh API Client
 
-A simple, lightweight piece of code to report doh1.
+A simple, lightweight piece of code to report doh.
 
 ```
-pip install doh1
+pip install doh
 ```
 
 For detailed instructions, read the Automation header.
